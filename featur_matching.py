@@ -62,8 +62,8 @@ def explore_match(win, img1, img2, kp_pairs, status=None, H=None):
     cv2.imshow(win, vis)
 
 
-img1 = cv2.imread("/Users/shichao/Downloads/algorithm.jpg")
-img2 = cv2.imread("/Users/shichao/Downloads/rotate_algorithm_cn.jpg")
+img1 = cv2.imread("./algorithm.jpg")
+img2 = cv2.imread("./rotate_algorithm_cn.jpg")
 
 img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
 img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
