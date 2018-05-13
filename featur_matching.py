@@ -4,6 +4,8 @@ __author__ = 'shichao'
 import cv2
 # from find_obj import filter_matches,explore_match
 import numpy as np
+import os
+import glob
 
 
 def filter_matches(kp1, kp2, matches, ratio=0.75):
@@ -61,25 +63,49 @@ def explore_match(win, img1, img2, kp_pairs, status=None, H=None):
 
     cv2.imshow(win, vis)
 
+def matched_points(img1, img2):
 
-img1 = cv2.imread("./algorithm.jpg")
-img2 = cv2.imread("./rotate_algorithm_cn.jpg")
+    img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+    img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
-img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    sift = cv2.xfeatures2d.SIFT_create()
 
-sift = cv2.xfeatures2d.SIFT_create()
+    kp1, des1 = sift.detectAndCompute(img1_gray, None)
+    kp2, des2 = sift.detectAndCompute(img2_gray, None)
 
-kp1, des1 = sift.detectAndCompute(img1_gray, None)
-kp2, des2 = sift.detectAndCompute(img2_gray, None)
+    # BFmatcher with default parms
+    bf = cv2.BFMatcher(cv2.NORM_L2)
+    matches = bf.knnMatch(des1, des2, k=2)
 
-# BFmatcher with default parms
-bf = cv2.BFMatcher(cv2.NORM_L2)
-matches = bf.knnMatch(des1, des2, k=2)
+    p1, p2, kp_pairs = filter_matches(kp1, kp2, matches, ratio=0.75)
+    print(len(kp_pairs))
+    explore_match('matches', img1_gray, img2_gray, kp_pairs)
+    # img3 = cv2.drawMatchesKnn(img1_gray,kp1,img2_gray,kp2,good[:10],flag=2)
 
-p1, p2, kp_pairs = filter_matches(kp1, kp2, matches, ratio=0.5)
-explore_match('matches', img1_gray, img2_gray, kp_pairs)
-# img3 = cv2.drawMatchesKnn(img1_gray,kp1,img2_gray,kp2,good[:10],flag=2)
+    cv2.waitKey(10000)
+    cv2.destroyAllWindows()
 
-cv2.waitKey(10000)
-cv2.destroyAllWindows()
+if __name__ == "__main__":
+    threshold = 30
+    test_path = ''
+    library_path = ''
+    test_dirs = os.listdir(test_path)
+    train_dirs = os.listdir(library_path)
+    for test_dir in test_dirs:
+        test_img_dirs = glob.glob(os.path.join(os.path.join(test_path,test_dir),'*.*'))
+        for test_img_dir in test_img_dirs:
+            img_test = cv2.imread(test_img_dir)
+            for train_dir in train_dirs:
+                train_img_dirs = glob.glob(os.path.join(os.path.join(library_path,train_dir),'*.*'))
+                img_lib = cv2.imread(train_dir)
+                points = matched_points(img_test,img_lib)
+                if points > threshold:
+                    print('{0: 1}'.format(test_dir,train_dir))
+
+
+    img1 = cv2.imread("./algorithm_cn.jpg")
+    # img1 = cv2.imread("./algorithm.jpg")
+    img2 = cv2.imread("./rotate_algorithm_cn.jpg")
+    points = matched_points(img1,img2)
+    if points > threshold:
+        print('')
