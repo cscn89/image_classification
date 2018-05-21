@@ -7,6 +7,28 @@ import numpy as np
 import os
 import config
 
+'''
+this script includes the functions
+calculate IOU by the func calc_IOU
+display the elasped time in the form hour:minute:second by the func humanTime
+display image keypoints detected by surf by the func displayKeyPoints
+
+'''
+
+def calc_IOU(box1, box2):
+    '''
+    :param box1: the coordinate of box in the form (x1,y1,x2,y2)
+    :param box2: the coordinate of box in the form (x1,y1,x2,y2)
+    :return:
+    '''
+    x1 = max(box1[0],box2[0])
+    y1 = max(box1[1],box2[1])
+    x2 = min(box1[2],box2[2])
+    y2 = min(box1[3],box2[3])
+    intersection = float(abs((x2-x1)*(y2-y1)))
+    union = abs((box1[2]-box1[0])*(box1[3]-box1[1])) + abs((box2[2]-box2[0])*(box2[3]-box2[1]))
+    IOU = intersection/union
+    return IOU
 
 def humanTime(sec):
     '''
