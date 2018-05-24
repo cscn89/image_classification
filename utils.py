@@ -32,7 +32,10 @@ def calc_IOU(box1, box2):
     y1 = max(box1[1],box2[1])
     x2 = min(box1[2],box2[2])
     y2 = min(box1[3],box2[3])
-    intersection = float(abs((x2-x1)*(y2-y1)))
+    if (x1>x2 or y1>y2):
+        print('no intersection')
+        return 0
+    intersection = float((x2-x1)*(y2-y1))
     union = abs((box1[2]-box1[0])*(box1[3]-box1[1])) + abs((box2[2]-box2[0])*(box2[3]-box2[1]))
     IOU = intersection/union
     return IOU
