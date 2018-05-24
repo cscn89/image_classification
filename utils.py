@@ -156,7 +156,7 @@ def img_hist_similarity(test_path, rootdir):
             # for each in resultDict:
             #     print(each, resultDict[each],sep="----")
             sortedDict = sorted(resultDict.items(), key=lambda asd: asd[1], reverse=True)
-            print(test_img_dir + ' ' + os.path.split(os.path.split(sortedDict[0][0])[0])[1])
+            # print(test_img_dir + ' ' + os.path.split(os.path.split(sortedDict[0][0])[0])[1])
             result.append(test_img_dir + ' ' + os.path.split(os.path.split(sortedDict[0][0])[0])[1])
             # print(test_img_dir + ' ' + os.path.splitext(os.path.split(sortedDict[0][0])[1])[0])
             # for i in range(5):
@@ -165,5 +165,6 @@ def img_hist_similarity(test_path, rootdir):
             print('per img time is {0}'.format(per_img_end - per_img_start))
     end = time.time()
     print('elasped time is {0}'.format(end - start))
-    print(result)
-
+    # print(result)
+    for output in result:
+        print(output)
