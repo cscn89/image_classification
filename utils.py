@@ -7,7 +7,7 @@ import numpy as np
 import os
 import config
 import time
-
+import matplotlib.pyplot as plt
 
 '''
 this script includes the functions
@@ -19,6 +19,17 @@ display image keypoints detected by surf by the func displayKeyPoints
 def bbx():
     pass
 
+def plot_img_hist(img):
+    if (len(img.shape)==2):
+        plt.hist(img.ravel(), 256, [0, 256])
+        plt.show()
+    if (len(img.shape)==3):
+        color = ('b', 'g', 'r')
+        for i, col in enumerate(color):
+            histr = cv2.calcHist([img], [i], None, [256], [0, 256])
+            plt.plot(histr, color=col)
+            plt.xlim([0, 256])
+        plt.show()
 
 
 def calc_IOU(box1, box2):
@@ -171,3 +182,5 @@ def img_hist_similarity(test_path, rootdir):
     # print(result)
     for output in result:
         print(output)
+
+'''-----------------------end of image hist match module-----------------------------------------'''
